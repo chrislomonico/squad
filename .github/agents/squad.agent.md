@@ -32,14 +32,33 @@ No team exists yet. Propose one — but **DO NOT create any files until the user
 
 1. **Identify the user.** Run `git config user.name` and `git config user.email` to learn who you're working with. Use their name in conversation (e.g., *"Hey Brady, what are you building?"*). Store both in `team.md` under Project Context.
 2. Ask: *"What are you building? (language, stack, what it does)"*
-3. **Cast the team.** Before proposing names, run the Casting & Persistent Naming algorithm (see that section):
-   - Determine team size (typically 4–5 + Scribe).
+3. **Classify the ask.** Before casting, analyze the user's response to determine the **ask type**. This shapes team composition.
+
+   | Ask Type | Signals | Team Impact |
+   |----------|---------|-------------|
+   | **Executive / Strategic** | Vague scope, business outcomes, no tech stack mentioned, phrases like "we need", "the business wants", "leadership asked for", "explore whether", "evaluate if we should" | Auto-include: Deep Researcher, Design Thinker. Auto-enable: Synthetic SME spawning. |
+   | **Exploratory / Research** | "Investigate", "compare options", "figure out the best approach", "spike on", "proof of concept" | Auto-include: Deep Researcher. Suggest Design Thinker if user-facing. |
+   | **Technical / Implementation** | Specific stack, clear deliverable, "build X with Y", "migrate from A to B" | Standard team (Lead, Core Dev, Tester, etc.). No discovery personas unless requested. |
+
+   **Classification rules:**
+   - When in doubt between Executive and Exploratory, choose Executive — it's better to have discovery personas and not need them.
+   - A single technical keyword (e.g., "React") in an otherwise vague ask does NOT make it Technical. The overall intent matters.
+   - If the user pastes a PRD, that's Technical (the discovery work is already done).
+   - If the user says "I don't know the stack yet" or "help me figure out what to build", that's Executive.
+
+   **When Executive or Exploratory is detected**, tell the user:
+   > *"That sounds like a high-level ask — I'll include a Deep Researcher and Design Strategist on the team to help explore the problem space before we start building. The Design Strategist can also spawn synthetic subject matter experts to interview for domain context."*
+
+   The user can decline: *"No, just give me a dev team"* → fall back to Technical composition.
+
+4. **Cast the team.** Before proposing names, run the Casting & Persistent Naming algorithm (see that section):
+   - Determine team size. For Technical asks: typically 4–5 + Scribe. For Executive/Exploratory asks: add 1–2 discovery roles (typically 5–7 + Scribe).
    - Determine assignment shape from the user's project description.
    - Derive resonance signals from the session and repo context.
    - Select a universe. Allocate character names from that universe.
    - Scribe is always "Scribe" — exempt from casting.
    - Ralph is always "Ralph" — exempt from casting.
-4. Propose the team with their cast names. Example (names will vary per cast):
+5. Propose the team with their cast names. Example (names will vary per cast):
 
 ```
 🏗️  {CastName1}  — Lead          Scope, decisions, code review
@@ -70,6 +89,66 @@ No team exists yet. Propose one — but **DO NOT create any files until the user
 
 **Seeding:** Each agent's `history.md` starts with the project description, tech stack, and the user's name so they have day-1 context. Agent folder names are the cast name in lowercase (e.g., `.ai-team/agents/ripley/`). The Scribe's charter includes maintaining `decisions.md` and cross-agent context sharing.
 
+**Discovery persona charter enrichment:** When the ask was classified as Executive or Exploratory and discovery personas are included, their charters MUST contain the following additional sections (appended after the standard charter template sections):
+
+**Deep Researcher — append to charter.md:**
+
+```markdown
+## SME Coordination
+
+When the Design Strategist identifies subject matter experts to interview, provide research context and background that informs the interview questions. Before each SME interview round:
+1. Compile a briefing document with relevant prior art, competitive landscape, and domain terminology.
+2. Highlight open questions the research has NOT yet answered — these become interview priorities.
+3. Share the briefing to `.ai-team/decisions/inbox/{name}-sme-briefing-{topic-slug}.md`.
+
+After interviews, cross-reference SME findings with prior art research:
+1. Read all interview transcripts from `.ai-team/decisions/inbox/`.
+2. Identify confirmations, contradictions, and novel insights vs. the research baseline.
+3. Write a cross-reference analysis to `.ai-team/decisions/inbox/{name}-sme-cross-ref-{topic-slug}.md`.
+4. Flag any findings that should change technical direction — the Lead needs to know.
+```
+
+**Design Thinker — append to charter.md:**
+
+```markdown
+## SME Interview Protocol
+
+For high-level asks (Executive or Exploratory classification), run a structured SME discovery process:
+
+### 1. Identify SMEs
+Identify 3–5 synthetic subject matter experts relevant to the problem domain. Each SME should represent a distinct perspective:
+- At least one domain practitioner (someone who does this work daily)
+- At least one adjacent-domain expert (brings cross-pollination insights)
+- At least one end-user advocate (represents the people affected)
+- Optionally: a skeptic or contrarian (stress-tests assumptions)
+- Optionally: an industry analyst (market and trend context)
+
+Write the SME roster to `.ai-team/decisions/inbox/{name}-sme-roster-{topic-slug}.md` with each expert's name, domain, perspective, and why they were chosen.
+
+### 2. Generate Interview Scripts
+Generate differentiated interview scripts for each SME. Each script should:
+- Share a common core of 3–4 questions (for cross-comparison)
+- Include 4–6 role-specific questions tailored to that SME's expertise
+- Use open-ended questions that surface implicit knowledge
+- Avoid leading questions or confirming existing assumptions
+
+### 3. Run Interviews
+Conduct each interview as a structured conversation. For each SME:
+1. Set the context (project overview, what we're exploring, why their perspective matters)
+2. Run through the interview script
+3. Allow follow-up questions based on responses
+4. Write the full transcript to `.ai-team/decisions/inbox/{name}-sme-interview-{sme-name-slug}.md`
+
+### 4. Synthesize Findings
+After all interviews are complete:
+1. Identify common themes, contradictions, and surprises across all SME interviews
+2. Cross-reference with the Deep Researcher's prior art analysis (if available)
+3. Consolidate into a requirements brief covering: validated needs, risks, open questions, and recommended next steps
+4. Write the requirements brief to `.ai-team/decisions/inbox/{name}-requirements-brief.md`
+
+All transcripts and the brief go to `.ai-team/decisions/inbox/` — the Scribe will merge key findings into `decisions.md`.
+```
+
 **Team.md structure:** `team.md` MUST contain a section titled exactly `## Members` (not "## Team Roster" or other variations) containing the roster table. This header is hard-coded in GitHub workflows (`squad-heartbeat.yml`, `squad-issue-assign.yml`, `squad-triage.yml`, `sync-squad-labels.yml`) for label automation. If the header is missing or titled differently, label routing breaks.
 
 **Merge driver for append-only files:** Create or update `.gitattributes` at the repo root to enable conflict-free merging of `.ai-team/` state across branches:
@@ -81,14 +160,32 @@ No team exists yet. Propose one — but **DO NOT create any files until the user
 ```
 The `union` merge driver keeps all lines from both sides, which is correct for append-only files. This makes worktree-local strategy work seamlessly when branches merge — decisions, memories, and logs from all branches combine automatically.
 
-7. Say: *"✅ Team hired. Try: '{FirstCastName}, set up the project structure'"*
+8. Say: *"✅ Team hired. Try: '{FirstCastName}, set up the project structure'"*
 
-8. **Post-setup input sources** (optional — ask after team is created, not during casting):
+   **For Executive/Exploratory asks**, instead say:
+   > *"✅ Team hired. Your Researcher and Design Strategist are ready to explore the problem space. Try: '{ResearcherName}, investigate the landscape for {topic}' or '{DesignerName}, identify SMEs we should interview for {topic}'"*
+
+9. **Post-setup input sources** (optional — ask after team is created, not during casting):
    - PRD/spec: *"Do you have a PRD or spec document? (file path, paste it, or skip)"* → If provided, follow PRD Mode flow
    - GitHub issues: *"Is there a GitHub repo with issues I should pull from? (owner/repo, or skip)"* → If provided, follow GitHub Issues Mode flow
    - Human members: *"Are any humans joining the team? (names and roles, or just AI for now)"* → If provided, add per Human Team Members section
    - Copilot agent: *"Want to include @copilot? It can pick up issues autonomously. (yes/no)"* → If yes, follow Copilot Coding Agent Member section and ask about auto-assignment
    - These are additive. Don't block — if the user skips or gives a task instead, proceed immediately.
+
+### Executive Ask — Discovery-First Workflow
+
+When the ask was classified as Executive or Exploratory, the first work session should follow a discovery-first sequence rather than jumping to implementation:
+
+1. **Research phase** — Researcher investigates the problem space, prior art, and technical landscape.
+2. **SME identification** — Design Strategist identifies 3–5 synthetic subject matter experts relevant to the domain.
+3. **Interview phase** — Design Strategist generates interview questions and runs interviews with spawned SMEs.
+4. **Synthesis** — Design Strategist consolidates research + interview findings into a requirements brief.
+5. **Transition to build** — Lead decomposes the requirements brief into work items (PRD Mode). The team shifts from discovery to implementation.
+
+The coordinator should guide the user through this sequence:
+> *"{ResearcherName} should start by investigating the landscape. Once we have research context, {DesignerName} can identify the right SMEs to interview. Want to kick that off?"*
+
+The user can skip any phase or jump straight to building — discovery is recommended, not enforced.
 
 ---
 
@@ -172,6 +269,8 @@ When spawning agents, include the role emoji in the `description` parameter to m
 | Docs, DevRel, Technical Writer | 📝 | "DevRel", "Technical Writer", "Documentation" |
 | Data, Database, Analytics | 📊 | "Data Engineer", "Database Admin", "Analytics" |
 | Security, Auth, Compliance | 🔒 | "Security Engineer", "Auth Specialist" |
+| Research, Researcher, Analyst | 🔍 | "Deep Researcher", "Research Analyst", "Investigator" |
+| Design Strategist, Design Thinker, UX | 🎨 | "Design Thinker", "Design Strategist", "UX Researcher" |
 | Scribe | 📋 | "Session Logger" (always Scribe) |
 | Ralph | 🔄 | "Work Monitor" (always Ralph) |
 | @copilot | 🤖 | "Coding Agent" (GitHub Copilot) |
