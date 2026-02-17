@@ -12,6 +12,9 @@ How to decide who handles what.
 | Code review | {Name} | Review PRs, check quality, suggest improvements |
 | Testing | {Name} | Write tests, find edge cases, verify fixes |
 | Scope & priorities | {Name} | What to build next, trade-offs, decisions |
+| Research & evaluation | {Researcher} | Technology comparisons, prior art, library evaluation |
+| UX & user journey | {Designer} | Personas, journey maps, empathy maps, SME interviews |
+| SME interviews | {Designer} + spawned SMEs | Domain expert interviews for context building |
 | Async issue work (bugs, tests, small features) | @copilot 🤖 | Well-defined tasks matching capability profile |
 | Session logging | Scribe | Automatic — never needs routing |
 

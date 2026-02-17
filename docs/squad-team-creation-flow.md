@@ -109,6 +109,13 @@ sequenceDiagram
         Coord->>FS: Create agents/{name}/history.md<br/>(seeded with project context)
     end
 
+    opt Executive / Exploratory ask detected
+        Note over Coord,FS: Enrich discovery persona charters
+        Coord->>FS: Append "## SME Coordination" to<br/>Researcher's charter.md
+        Coord->>FS: Append "## SME Interview Protocol" to<br/>Designer's charter.md
+        Coord->>FS: Add discovery routing entries to routing.md<br/>(Research & evaluation, UX & user journey, SME interviews)
+    end
+
     Coord->>FS: Write decisions.md (empty)
     Coord->>FS: Ensure decisions/inbox/ exists
 
