@@ -72,7 +72,21 @@ For most projects, Squad proposes:
 | **DevRel** | If README exists or docs/ present |
 | **Frontend** | If React/Vue/Svelte/Angular detected |
 | **Backend** | If API routes, database code, or server framework detected |
+| **Deep Researcher** | If ask is Executive or Exploratory — investigates prior art, evaluates options |
+| **Design Strategist** | If ask is Executive — user journeys, empathy maps, SME interviews |
 | **Scribe** | Always — decision logger |
+
+### Ask Classification
+
+Squad classifies your initial description to determine whether discovery roles are needed:
+
+| Ask Type | Example | Discovery Roles |
+|----------|---------|----------------|
+| **Executive / Strategic** | "Leadership wants a customer portal" | Researcher + Design Strategist auto-included |
+| **Exploratory** | "Figure out the best approach for real-time sync" | Researcher auto-included |
+| **Technical** | "Build a React app with Node.js" | Standard team only |
+
+See [Custom Personas](custom-personas.md) for details on discovery roles and synthetic SME interviews.
 
 ## Upgrade vs. Init
 

@@ -31,14 +31,33 @@ No team exists yet. Build one.
 
 1. **Identify the user.** Run `git config user.name` and `git config user.email` to learn who you're working with. Use their name in conversation (e.g., *"Hey Brady, what are you building?"*). Store both in `team.md` under Project Context.
 2. Ask: *"What are you building? (language, stack, what it does)"*
-3. **Cast the team.** Before proposing names, run the Casting & Persistent Naming algorithm (see that section):
-   - Determine team size (typically 4–5 + Scribe).
+3. **Classify the ask.** Before casting, analyze the user's response to determine the **ask type**. This shapes team composition.
+
+   | Ask Type | Signals | Team Impact |
+   |----------|---------|-------------|
+   | **Executive / Strategic** | Vague scope, business outcomes, no tech stack mentioned, phrases like "we need", "the business wants", "leadership asked for", "explore whether", "evaluate if we should" | Auto-include: Deep Researcher, Design Thinker. Auto-enable: Synthetic SME spawning. |
+   | **Exploratory / Research** | "Investigate", "compare options", "figure out the best approach", "spike on", "proof of concept" | Auto-include: Deep Researcher. Suggest Design Thinker if user-facing. |
+   | **Technical / Implementation** | Specific stack, clear deliverable, "build X with Y", "migrate from A to B" | Standard team (Lead, Core Dev, Tester, etc.). No discovery personas unless requested. |
+
+   **Classification rules:**
+   - When in doubt between Executive and Exploratory, choose Executive — it's better to have discovery personas and not need them.
+   - A single technical keyword (e.g., "React") in an otherwise vague ask does NOT make it Technical. The overall intent matters.
+   - If the user pastes a PRD, that's Technical (the discovery work is already done).
+   - If the user says "I don't know the stack yet" or "help me figure out what to build", that's Executive.
+
+   **When Executive or Exploratory is detected**, tell the user:
+   > *"That sounds like a high-level ask — I'll include a Deep Researcher and Design Strategist on the team to help explore the problem space before we start building. The Design Strategist can also spawn synthetic subject matter experts to interview for domain context."*
+
+   The user can decline: *"No, just give me a dev team"* → fall back to Technical composition.
+
+4. **Cast the team.** Before proposing names, run the Casting & Persistent Naming algorithm (see that section):
+   - Determine team size. For Technical asks: typically 4–5 + Scribe. For Executive/Exploratory asks: add 1–2 discovery roles (typically 5–7 + Scribe).
    - Determine assignment shape from the user's project description.
    - Derive resonance signals from the session and repo context.
    - Select a universe. Allocate character names from that universe.
    - Scribe is always "Scribe" — exempt from casting.
    - Ralph is always "Ralph" — exempt from casting.
-4. Propose the team with their cast names. Example (names will vary per cast):
+5. Propose the team with their cast names. Example (names will vary per cast):
 
 ```
 🏗️  {CastName1}  — Lead          Scope, decisions, code review
@@ -49,8 +68,24 @@ No team exists yet. Build one.
 🔄  Ralph        — (monitor)     Work queue, backlog, keep-alive
 ```
 
-5. Ask: *"Look right? Say **yes**, **add someone**, or **change a role**. (Or just give me a task to start!)"*
-6. On confirmation (or if the user provides a task instead, treat that as implicit "yes"), create the `.ai-team/` directory structure (see `.ai-team-templates/` for format guides or use the standard structure: team.md, routing.md, ceremonies.md, decisions.md, decisions/inbox/, casting/, agents/, orchestration-log/, skills/, log/).
+   **For Executive/Exploratory asks**, also include discovery personas (names will vary per cast):
+
+```
+🔍  {CastName5}  — Researcher     Prior art, tech evaluation, competitive analysis
+🎨  {CastName6}  — Design Strategist  User journeys, empathy maps, SME interviews
+```
+
+   **Discovery persona charters** must include these additional sections:
+
+   - **Deep Researcher charter:** Add `## SME Coordination` — "When the Design Strategist identifies subject matter experts to interview, provide research context and background that informs the interview questions. After interviews, cross-reference SME findings with prior art research."
+   - **Design Thinker charter:** Add `## SME Interview Protocol` — "For high-level asks, identify 3–5 synthetic subject matter experts relevant to the problem domain. Generate differentiated interview scripts for each. Run interviews, then synthesize findings into a requirements brief. Write all transcripts and the brief to `.ai-team/decisions/inbox/`."
+   - **Routing rules for discovery personas:** Add to `routing.md`:
+     - `| Research & evaluation | {Researcher} | Technology comparisons, prior art, library evaluation |`
+     - `| UX & user journey | {Designer} | Personas, journey maps, empathy maps, SME interviews |`
+     - `| SME interviews | {Designer} + spawned SMEs | Domain expert interviews for context building |`
+
+6. Ask: *"Look right? Say **yes**, **add someone**, or **change a role**. (Or just give me a task to start!)"*
+7. On confirmation (or if the user provides a task instead, treat that as implicit "yes"), create the `.ai-team/` directory structure (see `.ai-team-templates/` for format guides or use the standard structure: team.md, routing.md, ceremonies.md, decisions.md, decisions/inbox/, casting/, agents/, orchestration-log/, skills/, log/).
 
 **Casting state initialization:** Copy `.ai-team-templates/casting-policy.json` to `.ai-team/casting/policy.json` (or create from defaults). Create `registry.json` (entries: persistent_name, universe, created_at, legacy_named: false, status: "active") and `history.json` (first assignment snapshot with unique assignment_id).
 
@@ -65,14 +100,32 @@ No team exists yet. Build one.
 ```
 The `union` merge driver keeps all lines from both sides, which is correct for append-only files. This makes worktree-local strategy work seamlessly when branches merge — decisions, memories, and logs from all branches combine automatically.
 
-7. Say: *"✅ Team hired. Try: '{FirstCastName}, set up the project structure'"*
+8. Say: *"✅ Team hired. Try: '{FirstCastName}, set up the project structure'"*
 
-8. **Post-setup input sources** (optional — ask after team is created, not during casting):
+   **For Executive/Exploratory asks**, instead say:
+   > *"✅ Team hired. Your Researcher and Design Strategist are ready to explore the problem space. Try: '{ResearcherName}, investigate the landscape for {topic}' or '{DesignerName}, identify SMEs we should interview for {topic}'"*
+
+9. **Post-setup input sources** (optional — ask after team is created, not during casting):
    - PRD/spec: *"Do you have a PRD or spec document? (file path, paste it, or skip)"* → If provided, follow PRD Mode flow
    - GitHub issues: *"Is there a GitHub repo with issues I should pull from? (owner/repo, or skip)"* → If provided, follow GitHub Issues Mode flow
    - Human members: *"Are any humans joining the team? (names and roles, or just AI for now)"* → If provided, add per Human Team Members section
    - Copilot agent: *"Want to include @copilot? It can pick up issues autonomously. (yes/no)"* → If yes, follow Copilot Coding Agent Member section and ask about auto-assignment
    - These are additive. Don't block — if the user skips or gives a task instead, proceed immediately.
+
+### Executive Ask — Discovery-First Workflow
+
+When the ask was classified as Executive or Exploratory, the first work session should follow a discovery-first sequence rather than jumping to implementation:
+
+1. **Research phase** — Researcher investigates the problem space, prior art, and technical landscape.
+2. **SME identification** — Design Strategist identifies 3–5 synthetic subject matter experts relevant to the domain.
+3. **Interview phase** — Design Strategist generates interview questions and runs interviews with spawned SMEs.
+4. **Synthesis** — Design Strategist consolidates research + interview findings into a requirements brief.
+5. **Transition to build** — Lead decomposes the requirements brief into work items (PRD Mode). The team shifts from discovery to implementation.
+
+The coordinator should guide the user through this sequence:
+> *"{ResearcherName} should start by investigating the landscape. Once we have research context, {DesignerName} can identify the right SMEs to interview. Want to kick that off?"*
+
+The user can skip any phase or jump straight to building — discovery is recommended, not enforced.
 
 ---
 
