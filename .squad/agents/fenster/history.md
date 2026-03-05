@@ -688,3 +688,11 @@ px tsx), it logs a test-mode warning but still validates config — useful for d
 - The SDK builders (defineSquad, defineTeam, defineAgent, defineRouting) are imported from @bradygaster/squad-sdk/builders — the subpath export, not the barrel. This is the SDK-First pattern for programmatic config.
 
 📌 Team update (2026-03-05T22-10-00Z): Azure Function sample implementation complete. samples/azure-function-squad/ (7 files, ~200 LOC). Dry-run flag added for validation. Foundation for future serverless variants. — decided by Fenster
+
+## Learnings
+
+- Azure Functions v4 Node.js programming model **requires** `"main"` in package.json to point to the compiled JS file containing `app.http()` registration. Without it, the runtime silently fails to discover functions → "No job functions found" error.
+- For TypeScript Azure Functions: always add a `build` step (`tsc`) and ensure `main` points to `dist/` output (e.g., `"main": "dist/functions/squad-prompt.js"`). The `start` script should chain build + func start: `npm run build && func start`.
+- A `prestart:func` npm script ensures `func start` always gets fresh compiled JS, preventing stale-build confusion.
+
+📌 Team update (2026-03-06): Fixed Azure Function sample — added missing `main` field to package.json, updated `start` script to build-then-run, added build documentation to README. Root cause was runtime couldn't discover function registration without `main` pointing to compiled output. — decided by Fenster

@@ -34,8 +34,16 @@
 
 ```bash
 npm install
-func start
+npm start          # builds TypeScript, then runs func start
 ```
+
+> **Why build first?** Azure Functions runs JavaScript, not TypeScript directly.
+> The `main` field in `package.json` points to `dist/functions/squad-prompt.js` —
+> the compiled output. Without building, the runtime can't discover the function
+> registration and you'll get "No job functions found."
+>
+> `npm start` handles this automatically (`npm run build && func start`).
+> If you prefer to build separately: `npm run build` then `func start`.
 
 Then send a request:
 

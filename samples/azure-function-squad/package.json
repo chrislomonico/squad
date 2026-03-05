@@ -4,11 +4,13 @@
   "private": true,
   "description": "Azure Function + Content Review Squad — Squad SDK sample",
   "type": "module",
+  "main": "dist/functions/squad-prompt.js",
   "scripts": {
-    "start": "npx tsx src/functions/squad-prompt.ts",
-    "start:func": "func start",
     "build": "tsc",
     "build:check": "tsc --noEmit",
+    "start": "npm run build && func start",
+    "start:func": "func start",
+    "prestart:func": "npm run build",
     "test": "npx tsx src/functions/squad-prompt.ts --dry-run"
   },
   "dependencies": {
