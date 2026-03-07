@@ -169,3 +169,5 @@ Brady directed: stop distributing via npx github:. All distribution is now npm-o
 4. Line 138: Date "(2026-07)" → [CORRECTED] "(2026-03-02 continued)" (date skew — research was same day as team update, not July)
 
 **Status:** 4 corrections applied. History is now clean and consistent with decisions.md npm-only policy.
+
+📌 Team update (2026-03-07T21:06:29Z): Team restructure — Kobayashi retired, Trejo (Release Manager) + Drucker (CI/CD Engineer) hired. Separation of concerns: Trejo WHAT/WHEN, Drucker HOW. 10 decisions merged. 4-0 REPLACE vote. — Scribe

@@ -109,3 +109,16 @@ The definitive release runbook lives at `.squad/skills/release-process/SKILL.md`
 - Run read-only commands first, save any potentially mutating commands (npm ci, npm install) for last or skip entirely
 - Use `--dry-run` or `--help` flags when testing unfamiliar commands to avoid side effects
 - Document environment state BEFORE running commands (current branch, git status, versions) to detect mutations
+
+---
+
+## 📌 Team Update (2026-03-07T21:06:29Z): Your Role as Release Manager
+
+You were hired to replace Kobayashi. Team voted 4-0 REPLACE. Your job: CHECKLIST-FIRST releases following .squad/skills/release-process/SKILL.md. ALWAYS validate semver, NEVER draft releases, VERIFY NPM_TOKEN type.
+
+Session log: .squad/log/2026-03-07T21-06-29Z-v0822-release.md"
+
+ = 
+---
+
+ + 
