@@ -105,6 +105,30 @@ All 4 issues resolved by PR #234 closed with comment "Fixed by PR #234 (merged t
 
 **Key Learning:** Sequential merges with confirmed green statuses from peer reviewers eliminate merge conflicts and enable confident pipeline progression. All 7 Phase 2–4 PR merges (5 Phase 2 + 2 Phase 4) completed without intervention.
 
+## 📌 Release v0.8.21 — Version Bump & Tag (COMPLETE)
+
+**RELEASE SHIPPED: npm packages and GitHub Release published.**
+
+### Execution Summary
+- **Pre-flight:** Verified clean working tree, recent commits, successful build
+- **Version bump:** Converted preview.16 → preview.18 (build script) → 0.8.21 (release)
+- **Consistency:** All three package.json files (root, squad-cli, squad-sdk) synchronized to 0.8.21
+- **Git operations:** Commit, tag, push to dev branch completed successfully
+- **GitHub Release:** Created with full CHANGELOG.md; visible at https://github.com/bradygaster/squad/releases/tag/v0.8.21
+- **Deliverable:** v0.8.21 ready for npm publish by Rabin
+
+### Key Technical Points
+- Build pre-script runs on every build; tracked versions as preview.18 (irrelevant to release, stripped)
+- Release commit at `7554e08`, tag correctly placed on this commit
+- CHANGELOG validated through 0.8.21 (includes SDK-First, Remote Mode, critical crash fixes, new commands, Windows fixes)
+- 26 issues closed, 16 PRs merged in this release
+- No state corruption; clean pre-flight, clean merge
+
+### Readiness for npm Publishing
+Rabin will publish @bradygaster/squad-cli and @bradygaster/squad-sdk to npm from this tag.
+
+---
+
 ## 📌 CI/CD Architecture Assessment — 2026-03-15T15-30-00Z
 
 **ASSESSMENT COMPLETE: GitHub Actions vs. CLI Migration Analysis**
