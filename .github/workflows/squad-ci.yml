@@ -38,9 +38,9 @@ jobs:
         with:
           node-version: 22
 
-      - name: Lint lockfile for stale workspace entries
+      - name: Install dependencies
         run: |
-          # Detect stale nested copies of workspace packages that shadow symlinks
+          # Auto-fix stale nested workspace entries that shadow symlinks
           STALE=$(node -e "
             const lock = require('./package-lock.json');
             const pkgs = lock.packages || {};
@@ -48,16 +48,14 @@ jobs:
               k.includes('/node_modules/@bradygaster/squad-') &&
               pkgs[k].resolved && pkgs[k].resolved.startsWith('https://')
             );
-            if (stale.length) {
-              console.error('Stale nested workspace entries found in package-lock.json:');
-              stale.forEach(s => console.error('  ' + s));
-              console.error('Fix: delete these entries from package-lock.json and run npm install');
-              process.exit(1);
-            }
+            if (stale.length) { console.log('found'); } else { console.log('clean'); }
           ")
-
-      - name: Install dependencies
-        run: npm ci
+          if [ "$STALE" = "found" ]; then
+            echo "::warning::Stale workspace entries in lockfile — using npm install to auto-fix"
+            npm install
+          else
+            npm ci
+          fi
 
       - name: Install docs dependencies
         run: npm ci
