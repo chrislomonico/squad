@@ -4,6 +4,18 @@
 
 ## Learnings
 
+### Privacy scrub messaging + EPERM + gitignore parent coverage (#549) (2026-07-14)
+
+**Context:** Upgrade footer message always said "Preserves user state" even when the email privacy scrub had run — a direct contradiction of what just happened. Two related issues in the same function: EPERM on read-only `.gitattributes` would crash the upgrade, and `.gitignore` would add redundant entries already covered by parent paths (e.g. `.squad/log/` when `.squad/` was already present).
+
+**Fix:**
+1. `upgrade.ts` — `ensureGitattributes` catches EPERM/EACCES and returns `[]` with a console.warn, graceful degradation.
+2. `upgrade.ts` — `ensureGitignore` skips an entry when any existing line is a parent prefix of it.
+3. `upgrade.ts` — Footer logic checks whether the email scrub actually ran; shows "Privacy scrub applied" or "Preserves user state" accordingly.
+4. `test/cli/upgrade.test.ts` — Added EPERM test using `chmodSync` (fix: `chmodSync` was missing from the `fs` import — added it).
+
+**Pattern:** When adding a new fs function to a test, always verify the named import list at the top of the test file. Missing named imports from `'fs'` produce `ReferenceError` at runtime, not at type-check time (if the test file isn't part of the main tsconfig).
+
 📌 **Team update (2026-03-22T09-35Z — Wave 1):** Economy mode fully implemented: ECONOMY_MODEL_MAP + resolveModel() integration in SDK, `squad economy on|off` CLI command, `--economy` flag, 34 tests passing. PR #504 open for review. Soft dependency: #464 rate limit UX should offer economy mode as recovery. Next: Phase 1 of ambient personal squad (T1–T5, T19) — ready to start immediately after merging current work. Procedures wrote governance proposals for squad.agent.md — awaiting Flight review.
 ### Rate Limit UX (#464) (2026-03-20)
 

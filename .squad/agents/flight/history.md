@@ -66,6 +66,21 @@ Created `.squad/skills/content-triage/SKILL.md` to codify the boundary heuristic
 
 Wave 1 architecture work on #329/#344: validated 20KB personal squad design doc, identified and patched 5 gaps, authored 19-task implementation plan spanning 4 future PRs. Implementation not yet started — deferred to future session. EECOM assigned Phase 1–2 (SDK + CLI), Procedures assigned Phase 3 (governance), Sims assigned Phase 4 (tests).
 
+### Community PR Batch Review — July 2026
+
+Five open community PRs reviewed:
+
+- **#524 (diberry)** — Astro docs improvements (sitemap, RSS, schema fields, ToC component, robots.txt). ✅ Merge-ready. Flag: `robots.txt` Sitemap URL points to `squad.dev` while `astro.config.mjs` still uses `bradygaster.github.io` — minor URL inconsistency to address.
+- **#523 (diberry)** — Worktree-aware `detectSquadDir` + `resolveWorktreeMainCheckout` + init guard. ✅ Merge-ready. Directly addresses the worktree gap flagged in #525. Clean implementation; interactive TTY prompt with sensible default.
+- **#522 (tamirdresher)** — Rate limiting/circuit breaker watch integration. 🔄 Still a full rewrite of watch.ts. Brady's CHANGES_REQUESTED (additive patch, not full file replacement) has NOT been addressed. Same structural concern remains.
+- **#513 (tamirdresher)** — Cross-machine-coordination SKILL.md. 🔄 Wrong directory (`.squad/skills/` is team-state; generic library content belongs in `templates/skills/`). Personal use case examples (voice cloning, DevBox) should be generalized. Needs `docs/proposals/` entry per proposal-first policy.
+- **#507 (JasonYeYuhe)** — Chinese README translation. 🔄 Needs a community-maintained freshness disclaimer before merging. Translation quality looks solid; the maintenance burden concern is the only gate.
+
+**Patterns noted:**
+- Diberry (MSFT) is delivering consistent, architecturally-sound contributions — both PRs are merge-ready.
+- Tamir's contributions are technically strong but need delivery discipline (full-rewrite vs. surgical patch, proposal-first for new primitives).
+- Community translations are welcome but need a sustainability framing before merge.
+
 ### Worktree Gap Triage — #525 (2025-07-18)
 
 Community contributor joniba filed #525 identifying that Squad has full worktree *detection* but zero worktree *creation* in the coordinator/spawn flow. Validated all 10 claims — analysis is accurate. The reading infrastructure (resolveSquad() worktree detection, .gitattributes merge=union, boundary tests) is ~95% complete. The gap: ralph-commands.ts hardcodes `git checkout -b` in all 3 platform adapters (lines 50/71/92), coordinator never creates worktrees before spawn, no WORKTREE_PATH in prompts, and issue-lifecycle.md is referenced in squad.agent.md but doesn't exist.
